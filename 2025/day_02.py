@@ -3,8 +3,7 @@ d = map(lambda x : map(int, x.split('-')), open('./input/day_02.txt').read().spl
 
 suspects = []
 for a,b in d:
-    for s in range(a, b+1):
-        s = str(s)
+    for s in map(str, range(a, b+1)):
         for n in range(1, len(s)):
             if len({*batched(s, n)}) == 1:
                 suspects += [(n == len(s) / 2, int(s))]
