@@ -5,10 +5,8 @@ removed = set()
 for i in range(100):
     for roll in rolls - removed:
         sus = {roll + x for x in surroundings}
-        if len(sus & rolls) < 4:
-            removed.add(roll)
+        if len(sus & rolls) < 4: removed.add(roll)
     rolls -= removed
-    if not i: print(len(removed))
-print(len(removed))
+    if not i or i == 99: print(len(removed))
 
 
