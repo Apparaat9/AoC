@@ -1,22 +1,15 @@
+from math import prod
 import networkx as nx
 
-data = open('./input/day_11.txt').read().splitlines()
 G = nx.DiGraph()
-
-for d in data:
-    a, *b = d.split()
-    for node in b:
-        G.add_edge(a[:-1],node)
+for a, *b in map(str.split, open('./input/day_11.txt')):
+    G.add_edges_from([(a[:-1],c) for c in b])
 
 print(len(list( nx.shortest_simple_paths(G, source='you', target='out'))))
 
-suspects = nx.descendants(G,'svr') & nx.ancestors(G, 'fft') | nx.descendants(G,'fft') & nx.ancestors(G,'dac') | nx.descendants(G,'dac') & nx.ancestors(G,'out')
+r = ['svr','fft','dac','out']
+r_order = [[r[i],r[i+1]] for i in range(len(r)-1)]
+suspects = set().union(*[nx.descendants(G, a) & nx.ancestors(G,b) for a, b in r_order])
+G.remove_nodes_from(G.nodes - (suspects | set(r)))
 
-for node in list(G.nodes):
-    if node not in suspects | {'svr','fft','dac','out'}:
-        G.remove_node(node)
-
-svr_to_fft = nx.all_simple_paths(G, source='svr',target='fft')
-fft_to_dac = nx.all_simple_paths(G, source='fft',target='dac')
-dac_to_out = nx.all_simple_paths(G, source='dac',target='out')
-print(len(list(svr_to_fft)) * len(list(fft_to_dac)) * len(list(dac_to_out)))
+print(prod(len(list(nx.all_simple_paths(G, source=a,target=b))) for a, b in r_order))
