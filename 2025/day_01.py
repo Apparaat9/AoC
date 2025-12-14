@@ -11,5 +11,4 @@ for i in map(int, d.split()):
     z += abs(nr) // 100
     a += [nr % 100]
 
-print(a.count(0))
-print(z)
+print(a.count(0), z)
